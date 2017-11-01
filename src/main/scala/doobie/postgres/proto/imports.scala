@@ -25,39 +25,44 @@ object imports {
       val columnFr = Fragment.const(slidingColumn)
       val aliasFr = Fragment.const(alias)
 
-      Fragments.whereAndOpt(maybeCursor
-        .map {
-          case Cursor(before, after, None, Some(last)) =>
-            Fragments.and(
-              fr"rnum>=(select min(rnum) from t where" ++
-                columnFr ++
-                fr"= $after ::" ++
-                Fragment.const(cursorColumnType) ++
-                fr")",
-              fr"rnum<=(select max(rnum) from t where" ++
-                columnFr ++
-                fr"= $before::" ++
-                Fragment.const(cursorColumnType) ++
-                fr")"
-            ) ++ fr"order by rnum desc limit $last"
-          case Cursor(before, after, first, _) =>
-            Fragments.and(
-              fr"rnum>=(select min(rnum) from" ++
-                aliasFr ++
-                fr"where" ++
-                columnFr ++
-                fr"= $after ::" ++
-                Fragment.const(cursorColumnType) ++
-                fr")",
-              fr"rnum<=(select max(rnum) from" ++
-                aliasFr ++
-                fr"where" ++
-                columnFr ++
-                fr"= $before::" ++
-                Fragment.const(cursorColumnType) ++
-                fr")"
-            ) ++ first.map(limit => fr"limit $limit").getOrElse(Fragment.empty)
-        })
+      Fragments.whereAndOpt(
+        maybeCursor
+          .map {
+            case Cursor(before, after, None, Some(last)) =>
+              Fragments.and(
+                fr"rnum>=(select min(rnum) from t where" ++
+                  columnFr ++
+                  fr"= $after ::" ++
+                  Fragment.const(cursorColumnType) ++
+                  fr")",
+                fr"rnum<=(select max(rnum) from t where" ++
+                  columnFr ++
+                  fr"= $before::" ++
+                  Fragment.const(cursorColumnType) ++
+                  fr")"
+              ) ++
+                fr"order by rnum desc" ++
+                Fragment.const(s" limit $last")
+            case Cursor(before, after, first, _) =>
+              Fragments.and(
+                fr"rnum>=(select min(rnum) from" ++
+                  aliasFr ++
+                  fr"where" ++
+                  columnFr ++
+                  fr"= $after ::" ++
+                  Fragment.const(cursorColumnType) ++
+                  fr")",
+                fr"rnum<=(select max(rnum) from" ++
+                  aliasFr ++
+                  fr"where" ++
+                  columnFr ++
+                  fr"= $before::" ++
+                  Fragment.const(cursorColumnType) ++
+                  fr")"
+              ) ++ first
+                .map(limit => Fragment.const(s" limit $limit"))
+                .getOrElse(Fragment.empty)
+          })
 
     }
 

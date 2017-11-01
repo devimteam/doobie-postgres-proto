@@ -32,7 +32,9 @@ lazy val doobiePostgresProto = (project in file("."))
       //doobie (database)
       "org.tpolecat" %% "doobie-core-cats" % doobieVersion,
       "org.tpolecat" %% "doobie-postgres-cats" % doobieVersion,
+      //test
       "com.dimafeng" %% "testcontainers-scala" % "0.7.0" % "test",
+      "org.testcontainers" % "postgresql" % "1.4.3%"test"",
       "org.scalatest" %% "scalatest" % "3.0.4" % "test"
     )
   )
