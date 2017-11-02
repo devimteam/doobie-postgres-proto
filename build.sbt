@@ -1,7 +1,7 @@
 lazy val doobieVersion = "0.4.4"
 
 lazy val baseSettings = Seq(
-  scalaVersion := "2.12.3",
+  scalaVersion := "2.12.4",
   organization := "com.devim",
   version := "0.1.0-SNAPSHOT",
   resolvers ++= Seq(
@@ -34,7 +34,8 @@ lazy val doobiePostgresProto = (project in file("."))
       "org.tpolecat" %% "doobie-postgres-cats" % doobieVersion,
       //test
       "com.dimafeng" %% "testcontainers-scala" % "0.7.0" % "test",
-      "org.testcontainers" % "postgresql" % "1.4.3%"test"",
-      "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+      "org.testcontainers" % "postgresql" % "1.4.3"%"test",
+      "org.scalatest" %% "scalatest" % "3.0.4" % "test",
+      "org.tpolecat" %% "doobie-scalatest-cats" % doobieVersion % "test"
     )
   )
