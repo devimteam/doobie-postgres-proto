@@ -1,9 +1,29 @@
 package doobie.postgres.proto
 
-import com.devim.protobuf.relay.Cursor
+import cats.Show
+import com.devim.protobuf.relay.{Cursor, Page}
 import doobie.imports._
+import shapeless._
+import shapeless.ops.hlist.Selector
 
 object imports {
+
+  private final val defaultPage = Page()
+
+  implicit class RelayPageExtractor[L <: HList](list: List[Long :: Long :: L]) {
+    def extract[T]()(implicit s: Show[T], selector: Selector[L, T]): Page = {
+      (list.lastOption, list.headOption) match {
+        case (Some(lastNum :: total :: lastTail),
+              Some(firstNum :: _ :: firstTail)) =>
+          Page(lastNum < total,
+               firstNum > 0,
+               Some(s.show(selector(firstTail))),
+               Some(s.show(selector(lastTail))))
+        case _ => defaultPage
+      }
+
+    }
+  }
 
   implicit class RelayFragment(fr: Fragment) {
     def queryWithCursor[B: Composite](cursorColumn: String,
