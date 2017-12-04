@@ -10,11 +10,12 @@ object imports {
 
   private final val defaultPage = Page()
 
-  implicit class RelayPageExtractor[L <: HList](list: List[Long :: Long :: L]) {
+  implicit class RelayPageExtractor[L <: HList](val list: List[Long :: Long :: L])
+      extends AnyVal {
     def extract[T]()(implicit s: Show[T], selector: Selector[L, T]): Page = {
       (list.lastOption, list.headOption) match {
-        case (Some(lastNum :: total :: lastTail),
-              Some(firstNum :: _ :: firstTail)) =>
+        case (Some(total :: lastNum :: lastTail),
+              Some(_ :: firstNum :: firstTail)) =>
           Page(lastNum < total,
                firstNum > 0,
                Some(s.show(selector(firstTail))),
@@ -25,7 +26,7 @@ object imports {
     }
   }
 
-  implicit class RelayFragment(fr: Fragment) {
+  implicit class RelayFragment(val fr: Fragment) extends AnyVal {
     def queryWithCursor[B: Composite](cursorColumn: String,
                                       cursor: Option[Cursor],
                                       alias: String = "data",
