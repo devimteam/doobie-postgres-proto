@@ -3,7 +3,6 @@ lazy val doobieVersion = "0.4.4"
 lazy val baseSettings = Seq(
   scalaVersion := "2.12.4",
   organization := "com.devim",
-  version := "0.1.0-SNAPSHOT",
   resolvers ++= Seq(
     "Sonatype Nexus" at "https://nexus.devim.team/repository/maven-public/",
     "Central Proxy " at "https://nexus.devim.team/repository/maven-central/",
