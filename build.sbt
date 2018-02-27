@@ -31,7 +31,7 @@ lazy val doobiePostgresProto = (project in file("."))
   .settings(
     name := "doobie-postgres-proto",
     libraryDependencies ++= Seq(
-      "com.devim" %% "proto-utils" % "0.1.0-SNAPSHOT",
+      "com.devim" %% "proto-utils" % "1.1.6",
       //doobie (database)
       "org.tpolecat" %% "doobie-core-cats" % doobieVersion,
       "org.tpolecat" %% "doobie-postgres-cats" % doobieVersion,
